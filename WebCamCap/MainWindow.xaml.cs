@@ -64,6 +64,8 @@ namespace WebCamCap
             {
                 // create stats object and generate histogram using AForge
                 ImageStatistics stats = new ImageStatistics(grayUnmanaged);
+                // basically this is an array of integers
+                // buckets for how many pixels are in each shade (8 bits = 256 shades)
                 Histogram histogram = stats.Gray;
                 Bitmap bmp = new Bitmap(512, 100);
                 int[] values = histogram.Values;
@@ -72,11 +74,12 @@ namespace WebCamCap
                 // avoid division by zero
                 if (max == 0) return bmp;
 
+                // get a System.Drawing.Graphics object for drawing histogram
                 using (Graphics g = Graphics.FromImage(bmp))
                 {
                     // draw black background
                     g.Clear(System.Drawing.Color.FromArgb(30, 30, 30));
-                    using (System.Drawing.SolidBrush brush = new System.Drawing.SolidBrush(System.Drawing.Color.DarkGray))
+                    using (SolidBrush brush = new SolidBrush(System.Drawing.Color.DarkGray))
                     {
                         // loop over the 256 shades of gray, plot number of pixels in that shade (normalized)
                         for (int i = 0; i < 256; i++)
