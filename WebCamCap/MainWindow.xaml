@@ -12,9 +12,11 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Image x:Name="ImageFrame" Stretch="Uniform" Grid.Row="0" />
-        <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1">
+        <Image x:Name="HistogramFrame" Grid.Row="1" Margin="0,0,0,10" Stretch="Uniform" Width="512" Height="100" HorizontalAlignment="Center"/>
+        <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="2">
             <Button x:Name="BtnStart" Content="Start" Width="100" Height="30" Margin="5" Click="BtnStart_Click" />
             <Button x:Name="BtnStop" Content="Stop" Width="100" Height="30" Margin="5" Click="BtnStop_Click" IsEnabled="False" />
         </StackPanel>

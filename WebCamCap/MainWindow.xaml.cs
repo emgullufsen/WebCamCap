@@ -1,5 +1,9 @@
-﻿using AForge.Video;
+﻿using AForge.Imaging;
+using AForge.Imaging.Filters;
+using AForge.Math;
+using AForge.Video;
 using AForge.Video.DirectShow;
+using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Drawing.Imaging; // ImageFormat
 using System.IO;
@@ -23,6 +27,14 @@ namespace WebCamCap
     {
         private FilterInfoCollection? videoDevices;
         private VideoCaptureDevice? videoDevice;
+        // using AForge's Grayscale filter with:
+        // Red Weight:   0.2125
+        // Green Weight: 0.7154
+        // Blue Weight:  0.0721
+        // thanks to this StackOverflow Answer:
+        // https://stackoverflow.com/questions/20481848/what-are-the-parameters-for-aforges-grayscale-filter
+        // these are the weights used in the GNU Image Manipulation Program (GIMP) - good open source software!
+        private Grayscale grayscaleFilter = new Grayscale(0.2126, 0.7152, 0.0722);
         public MainWindow()
         {
             InitializeComponent();
@@ -44,40 +56,103 @@ namespace WebCamCap
             
 
         }
+        private Bitmap CreateHistogram(Bitmap bm)
+        {
+            // apply filter to Bitmap object
+            using (UnmanagedImage grayUnmanaged = grayscaleFilter.Apply(UnmanagedImage.FromManagedImage(bm)))
+            using (Bitmap grayFrame = grayUnmanaged.ToManagedImage())
+            {
+                // create stats object and generate histogram using AForge
+                ImageStatistics stats = new ImageStatistics(grayUnmanaged);
+                Histogram histogram = stats.Gray;
+                Bitmap bmp = new Bitmap(512, 100);
+                int[] values = histogram.Values;
+                int max = histogram.Max;
+
+                // avoid division by zero
+                if (max == 0) return bmp;
+
+                using (Graphics g = Graphics.FromImage(bmp))
+                {
+                    // draw black background
+                    g.Clear(System.Drawing.Color.FromArgb(30, 30, 30));
+                    using (System.Drawing.SolidBrush brush = new System.Drawing.SolidBrush(System.Drawing.Color.DarkGray))
+                    {
+                        // loop over the 256 shades of gray, plot number of pixels in that shade (normalized)
+                        for (int i = 0; i < 256; i++)
+                        {
+                            // Normalize the height to 100 pixels max
+                            int pctHeight = (int)(((double)values[i] / max) * 100);
+                            // Drawing is top->down, left->
+                            // so y = 100 is bottom of frame
+                            // so y1 is 100 - normalized height
+                            // we are making our histogram bars of width 2
+                            int xCoord = i * 2;
+                            int yCoord = 100 - pctHeight;
+                            int barWidth = 2;
+                            int barHeight = pctHeight;
+                            // draw bar 
+                            g.FillRectangle(brush, xCoord, yCoord, barWidth, barHeight);
+                        }
+                    }
+                }
+                return bmp;
+            }
+            
+            
+        }
+        private static BitmapImage? ConvertBitMap(Bitmap bitmap)
+        {
+            try
+            {
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    // save the frame bitmap to a memory stream
+                    bitmap.Save(ms, ImageFormat.Bmp);
+                    ms.Position = 0;
+
+                    BitmapImage bmi = new BitmapImage();
+                    bmi.BeginInit();
+                    bmi.StreamSource = ms;
+                    bmi.CacheOption = BitmapCacheOption.OnLoad;
+                    bmi.EndInit();
+                    bmi.Freeze();
+                    return bmi;
+                }    
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error converting BitMap to BitMapImage...");
+                return null;
+            }
+        }
+
         private void VideoDevice_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            // display the frame in the "Image" window
+            // display the frame in the "ImageFrame" window
+            // also create and display histogram of grayscale values in "HistogramFrame" window
             // must convert the frame first
             // thanks to this StackOverflow answer:
             // https://stackoverflow.com/questions/2006055/implementing-a-webcam-on-a-wpf-app-using-aforge-net
             try
             {
-                using (Bitmap bitmap = (Bitmap)eventArgs.Frame.Clone())
+                Bitmap bitmap = (Bitmap)eventArgs.Frame.Clone();
+                Bitmap bitmapGS = CreateHistogram(bitmap);
+                BitmapImage? bmi = ConvertBitMap(bitmap);
+                BitmapImage? bmiGS = ConvertBitMap(bitmapGS);
+                // Update the WPF Image control to display webcam image
+                // Update the WPF Histogram control to display histogram
+                Dispatcher.Invoke(() =>
                 {
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        // Save the frame bitmap to a memory stream
-                        bitmap.Save(ms, ImageFormat.Bmp);
-                        ms.Position = 0;
-
-                        BitmapImage bmi = new BitmapImage();
-                        bmi.BeginInit();
-                        bmi.StreamSource = ms;
-                        bmi.CacheOption = BitmapCacheOption.OnLoad;
-                        bmi.EndInit();
-                        bmi.Freeze();
-
-                        // Update the WPF Image control on the main UI thread
-                        Dispatcher.Invoke(() =>
-                        {
-                            ImageFrame.Source = bmi;
-                        });
-                    }
-                }
+                    ImageFrame.Source = bmi;
+                    HistogramFrame.Source = bmiGS;
+                });
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error grabbing frame from WebCam...");
+            }
             
-            }
 
         }
 
@@ -111,13 +186,13 @@ namespace WebCamCap
             {
                 videoDevice.SignalToStop();
                 videoDevice.NewFrame -= VideoDevice_NewFrame;
-                videoDevice.Stop();
                 videoDevice = null;
             }
 
             Dispatcher.Invoke(() =>
             {
                 ImageFrame.Source = null;
+                HistogramFrame.Source = null;
                 BtnStart.IsEnabled = true;
                 BtnStop.IsEnabled = false;
             });
