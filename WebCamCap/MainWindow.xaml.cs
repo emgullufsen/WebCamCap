@@ -26,25 +26,22 @@ namespace WebCamCap
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void StackPanel_Loaded(object sender, RoutedEventArgs e)
-        {
-
+            try
+            {
+                videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                if (videoDevices.Count == 0) {
+                    MessageBox.Show("No WebCam Found...");
+                }
+            }
+            catch (Exception ex) {
+                MessageBox.Show("An error occurred while searching webcam devices");
+            }
+            
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            // look for video input devices on this machine
-            videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            if (videoDevices.Count > 0) {
-                // use first device found in list
-                // must supply "moniker" string of first device to constructor
-                videoDevice = new VideoCaptureDevice(videoDevices[0].MonikerString);
-                // set event handler for NewFrame event
-                videoDevice.NewFrame += new NewFrameEventHandler(VideoDevice_NewFrame);
-                videoDevice.Start();
-            }
+        { 
+            
 
         }
         private void VideoDevice_NewFrame(object sender, NewFrameEventArgs eventArgs)
@@ -73,7 +70,7 @@ namespace WebCamCap
                         // Update the WPF Image control on the main UI thread
                         Dispatcher.Invoke(() =>
                         {
-                            imageFrame.Source = bmi;
+                            ImageFrame.Source = bmi;
                         });
                     }
                 }
@@ -82,6 +79,52 @@ namespace WebCamCap
             
             }
 
+        }
+
+        private void BtnStart_Click(object sender, RoutedEventArgs e)
+        {
+            if (videoDevices != null && videoDevices.Count > 0)
+            {
+                // use first device found in list
+                // must supply "moniker" string of first device to constructor
+                videoDevice = new VideoCaptureDevice(videoDevices[0].MonikerString);
+                // set event handler for NewFrame event
+                videoDevice.NewFrame += new NewFrameEventHandler(VideoDevice_NewFrame);
+                videoDevice.Start();
+
+                BtnStart.IsEnabled = false;
+                BtnStop.IsEnabled = true;
+            }
+            else
+            {
+                MessageBox.Show("No WebCam available to start.");
+            }
+        }
+        private void BtnStop_Click(object sender, RoutedEventArgs e)
+        {
+            StopCamera();
+        }
+
+        private void StopCamera()
+        {
+            if (videoDevice != null && videoDevice.IsRunning)
+            {
+                videoDevice.SignalToStop();
+                videoDevice.NewFrame -= VideoDevice_NewFrame;
+                videoDevice.Stop();
+                videoDevice = null;
+            }
+
+            Dispatcher.Invoke(() =>
+            {
+                ImageFrame.Source = null;
+                BtnStart.IsEnabled = true;
+                BtnStop.IsEnabled = false;
+            });
+        }
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            StopCamera();
         }
     }
 }

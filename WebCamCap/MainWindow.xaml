@@ -6,8 +6,18 @@
         xmlns:local="clr-namespace:WebCamCap"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
-        Loaded="Window_Loaded">
-    <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Loaded="StackPanel_Loaded">
-        <Image x:Name="imageFrame" Stretch="Uniform" />
-    </StackPanel>
+        Loaded="Window_Loaded"
+        Closing="Window_Closing">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Image x:Name="ImageFrame" Stretch="Uniform" Grid.Row="0" />
+        <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1">
+            <Button x:Name="BtnStart" Content="Start" Width="100" Height="30" Margin="5" Click="BtnStart_Click" />
+            <Button x:Name="BtnStop" Content="Stop" Width="100" Height="30" Margin="5" Click="BtnStop_Click" IsEnabled="False" />
+        </StackPanel>
+    </Grid>
+    
 </Window>
