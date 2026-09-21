@@ -16,7 +16,7 @@ This repo contains a .snlx file for use with Visual Studio, and two projects - t
 ### Using the .exe
 1. The application is one main window, with a Start and Stop button for Starting/Stopping reading from the WebCam.
 
-![WebCamCap Screenshot](./wcc_screenshot1.png)
+![WebCamCap Screenshot](./wcc_screenshot2.png)
 
 ## CI
 
