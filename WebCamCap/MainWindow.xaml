@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WebCamCap"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        Title="MainWindow" Height="650" Width="800"
         Loaded="Window_Loaded" Closing="Window_Closing"
         Background="#1E1E1E">
 
@@ -39,12 +39,19 @@
         </StackPanel>
 
         <!-- Webcam Feed Section -->
-        <StackPanel Grid.Row="1">
-            <TextBlock Text="Web Cam Feed" Foreground="White" Margin="0,0,0,4"/>
-            <Border Background="#121212" BorderBrush="#333333" BorderThickness="1" CornerRadius="6" Margin="0,0,0,12" Padding="4">
+        <Grid Grid.Row="1" Margin="0,0,0,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <!-- Forces the Border/Image to fill the row height -->
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="Web Cam Feed" Foreground="White" Margin="0,0,0,4"/>
+            <Border Grid.Row="1" Background="#121212" BorderBrush="#333333" BorderThickness="1" CornerRadius="6" Padding="4">
+                <!-- Image will now stretch to the bounds of the Border even when empty -->
                 <Image x:Name="ImageFrame" Stretch="Uniform"/>
             </Border>
-        </StackPanel>
+        </Grid>
 
         <!-- Histogram Section -->
         <StackPanel Grid.Row="2">
