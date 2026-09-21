@@ -56,7 +56,7 @@ namespace WebCamCap
             
 
         }
-        private Bitmap CreateHistogram(Bitmap bm)
+        public Bitmap CreateHistogram(Bitmap bm)
         {
             // apply filter to Bitmap object
             using (UnmanagedImage grayUnmanaged = grayscaleFilter.Apply(UnmanagedImage.FromManagedImage(bm)))
@@ -104,7 +104,7 @@ namespace WebCamCap
             
             
         }
-        private static BitmapImage? ConvertBitMap(Bitmap bitmap)
+        public static BitmapImage? ConvertBitMap(Bitmap bitmap)
         {
             try
             {

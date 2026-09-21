@@ -1,0 +1,34 @@
+name: WebCamCap .NET 10 CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. Check out the repository source code
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    # 2. Install the .NET 10 SDK
+    - name: Setup .NET 10
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x' # Fetches the latest minor/patch release of .NET 10
+
+    # 3. Restore NuGet dependencies
+    - name: Restore Dependencies
+      run: dotnet restore
+
+    # 4. Build the solution without doing a separate restore step
+    - name: Build Solution
+      run: dotnet build --no-restore --configuration Release
+
+    # 5. Run xUnit tests
+    - name: Run xUnit Tests
+      run: dotnet test --no-build --configuration Release --verbosity normal
