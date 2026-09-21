@@ -7,16 +7,46 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800"
         Loaded="Window_Loaded"
-        Closing="Window_Closing">
+        Closing="Window_Closing"
+        Background="#1E1E1E">
+    <Window.Resources>
+        <!-- Standard Button Style without Templates -->
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#3A3A3B"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="#555555"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="10,5"/>
+        </Style>
+    </Window.Resources>
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Image x:Name="ImageFrame" Stretch="Uniform" Grid.Row="0" />
-        <Image x:Name="HistogramFrame" Grid.Row="1" Margin="0,0,0,10" Stretch="Uniform" Width="512" Height="100" HorizontalAlignment="Center"/>
-        <StackPanel VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="2">
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock Text="WebCamCap" 
+                       Foreground="#FFFFFF" 
+                       FontSize="22" 
+                       FontWeight="Bold" 
+                       FontFamily="Segoe UI"/>
+            <TextBlock Text="Press Start/Stop to Control Histogram Creation" 
+                       Foreground="#AAAAAA" 
+                       FontSize="13" 
+                       Margin="0,4,0,0" 
+                       FontFamily="Segoe UI"/>
+        </StackPanel>
+        <Border Grid.Row="1" Background="#121212" BorderBrush="#333333" BorderThickness="1" CornerRadius="6" Margin="0,0,0,12" Padding="4">
+            <Image x:Name="ImageFrame" Stretch="Uniform" Grid.Row="0" />
+        </Border>
+        <Border Grid.Row="2" Background="#121212" BorderBrush="#333333" BorderThickness="1" CornerRadius="6" Margin="0,0,0,12" HorizontalAlignment="Center" Padding="2">
+            <Image x:Name="HistogramFrame" Stretch="Uniform" Width="512" Height="100"/>
+        </Border>
+        <StackPanel Grid.Row="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <Button x:Name="BtnStart" Content="Start" Width="100" Height="30" Margin="5" Click="BtnStart_Click" />
             <Button x:Name="BtnStop" Content="Stop" Width="100" Height="30" Margin="5" Click="BtnStop_Click" IsEnabled="False" />
         </StackPanel>
