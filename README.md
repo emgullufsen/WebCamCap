@@ -16,7 +16,7 @@ This repo contains a .snlx file for use with Visual Studio, and two projects - t
 ### Using the .exe
 1. The application is one main window, with a Start and Stop button for Starting/Stopping reading from the WebCam.
 
-![WebCamCap Screenshot](./wcc_screenshot0.png)
+![WebCamCap Screenshot](./wcc_screenshot1.png)
 
 ## CI
 
@@ -25,3 +25,5 @@ This application has a [test workflow](https://github.com/emgullufsen/WebCamCap/
 ## Building from Source
 
 If you prefer to build from source, please follow these instructions (on a Windows machine).
+1. Get the sources - `git clone` this repo or download the source code in .tar.gz format from the Releases page, and extract them.
+2. Change directory into the `WebCamCap` project directory, where the .csproj file is, and execute `dotnet run`.
