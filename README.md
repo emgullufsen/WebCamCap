@@ -1,5 +1,8 @@
 # WebCamCap - Web Camera Capture
 
+[![Build and Publish Release](https://github.com/emgullufsen/WebCamCap/actions/workflows/release.yml/badge.svg)](https://github.com/emgullufsen/WebCamCap/actions/workflows/release.yml)
+[![WebCamCap .NET 10 CI](https://github.com/emgullufsen/WebCamCap/actions/workflows/test.yml/badge.svg)](https://github.com/emgullufsen/WebCamCap/actions/workflows/test.yml)
+
 This is a simple desktop application for Windows that continuously captures images from the users webcam (if one is present), and displays a histogram of the grayscale values for the images. This repo contains the application code, offers binary releases as .zip archives, and has CI (GitHub Action) that invoke unit tests (xunit).
 
 ## Code
