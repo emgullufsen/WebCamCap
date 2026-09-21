@@ -10,7 +10,6 @@
         Background="#1E1E1E">
 
     <Window.Resources>
-        <!-- Standard Button Style -->
         <Style TargetType="Button">
             <Setter Property="Background" Value="#3A3A3B"/>
             <Setter Property="Foreground" Value="White"/>
@@ -32,36 +31,28 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Header Section -->
         <StackPanel Grid.Row="0" Margin="0,0,0,15">
             <TextBlock Text="WebCamCap" Foreground="White" FontSize="22" FontWeight="Bold" FontFamily="Segoe UI"/>
             <TextBlock Text="Press Start/Stop to Control Histogram Creation" Foreground="#AAAAAA" FontSize="13" Margin="0,4,0,0" FontFamily="Segoe UI"/>
         </StackPanel>
 
-        <!-- Webcam Feed Section -->
         <Grid Grid.Row="1" Margin="0,0,0,12">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-                <!-- Forces the Border/Image to fill the row height -->
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Row="0" Text="Web Cam Feed" Foreground="White" Margin="0,0,0,4"/>
             <Border Grid.Row="1" Background="#121212" BorderBrush="#333333" BorderThickness="1" CornerRadius="6" Padding="4">
-                <!-- Image will now stretch to the bounds of the Border even when empty -->
                 <Image x:Name="ImageFrame" Stretch="Uniform"/>
             </Border>
         </Grid>
-
-        <!-- Histogram Section -->
         <StackPanel Grid.Row="2">
             <TextBlock Text="Live Histogram of Grayscale" Foreground="White" Margin="0,0,0,4"/>
             <Border Background="#121212" BorderBrush="#333333" BorderThickness="1" CornerRadius="6" Margin="0,0,0,12" HorizontalAlignment="Center" Padding="2">
                 <Image x:Name="HistogramFrame" Stretch="Uniform" Width="512" Height="100"/>
             </Border>
         </StackPanel>
-
-        <!-- Control Buttons -->
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Center">
             <Button x:Name="BtnStart" Content="Start" Click="BtnStart_Click"/>
             <Button x:Name="BtnStop" Content="Stop" Click="BtnStop_Click" IsEnabled="False"/>

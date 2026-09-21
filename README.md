@@ -7,7 +7,7 @@ This is a simple desktop application for Windows that continuously captures imag
 
 ## Code
 
-This repo contains a .snlx file for use with Visual Studio, and two projects - the main WebCamCap project (WPF), and the tests in WebCamCapTest (xunit).
+This repo contains a .snlx file for use with Visual Studio, and two projects - the main WebCamCap project (WPF), and the tests in WebCamCapTest (XUnit).
 
 ## Usage
 
