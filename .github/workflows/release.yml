@@ -22,7 +22,7 @@ jobs:
 
       - name: Publish App
         run: |
-          dotnet publish WebCamCap/WebCamCap.scproj -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:PublishReadyToRun=true -o ./publish
+          dotnet publish WebCamCap/WebCamCap.csproj -c Release -r win-x64 --self-contained true /p:PublishSingleFile=true /p:PublishReadyToRun=true -o ./publish
 
       - name: Zip Artifact
         run: |
